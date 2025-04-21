@@ -65,7 +65,7 @@ def main(page: ft.Page):
             opzioni.value = ""
         if opzioni.value != "":
             risposte_utente[domanda.value - 1] = opzioni.value
-        # print(risposte_utente)
+        #print(risposte_utente)
         domanda.value += 1
         opzioni.value = risposte_utente[domanda.value - 1]
         crea_domanda(domanda.value)
@@ -140,6 +140,23 @@ def main(page: ft.Page):
             ft.Radio(value="A", label="A                     ", scale=1.2),
             ft.Radio(value="B", label="B                     ", scale=1.2),
             ft.Radio(value="C", label="C                     ", scale=1.2),
+            ft.Radio(value="D", label="D                     ", scale=1.2),
+            ft.Radio(value="E", label="E                     ", scale=1.2),
+            ft.Radio(value="F", label="F                  ", scale=1.2)
+        ]))
+    img_domanda = ft.Image(src="immagini\d1\domanda2.png", visible=False)
+    img_opzioni = [
+            ft.Image(src="immagini\d1\d1_risposta_A.png", visible=False),
+            ft.Image(src="immagini\d1\d1_risposta_B.png", visible=False),
+            ft.Image(src="immagini\d1\d1_risposta_C.png", visible=False),
+            ft.Image(src="immagini\d1\d1_risposta_D.png", visible=False),
+            ft.Image(src="immagini\d1\d1_risposta_E.png", visible=False),
+            ft.Image(src="immagini\d1\d1_risposta_F.png", visible=False)
+        ]
+    opzioni = ft.RadioGroup(visible=False, on_change=attiva_termina, content=ft.Row([
+            ft.Radio(value="A", label="A                     ", scale=1.2),
+            ft.Radio(value="C", label="B                     ", scale=1.2),
+            ft.Radio(value="B", label="C                     ", scale=1.2),
             ft.Radio(value="D", label="D                     ", scale=1.2),
             ft.Radio(value="E", label="E                     ", scale=1.2),
             ft.Radio(value="F", label="F                  ", scale=1.2)
