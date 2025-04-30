@@ -29,6 +29,12 @@ def main(page: ft.Page):
     page.title = "Test del quoziente intellettivo"
     page.vertical_alignment = ft.MainAxisAlignment.START
     
+    def carica_dati(range_eta):
+        pass
+    
+    def salva_dati(punteggio, range_eta):
+        pass
+        
     def crea_domanda(n_domanda):
         percorsi = carica_domanda(n_domanda)
         img_domanda.src = percorsi[0]
@@ -47,6 +53,7 @@ def main(page: ft.Page):
     def start(e):
         titolo1.visible = False
         testo1.visible = False
+        testo2.visible = False
         inizio.visible = False
         range_età.visible = False
         testo_domanda.visible = True
@@ -56,6 +63,7 @@ def main(page: ft.Page):
         successivo.visible = True
         precedente.visible = True
         termina.visible = True
+        crea_domanda(domanda.value)
         for i in range(len(img_opzioni)):
             img_opzioni[i].visible = True
         page.update()
@@ -77,7 +85,7 @@ def main(page: ft.Page):
     
     def prec(e):
         if opzioni.value == None:
-            opzioni.value = ""
+             opzioni.value = ""
         if opzioni.value != "":
             risposte_utente[domanda.value - 1] = opzioni.value
         # print(risposte_utente)
@@ -91,25 +99,61 @@ def main(page: ft.Page):
         page.update()
         
     def controlla_termina(e):
+        if opzioni.value == None:
+             opzioni.value = ""
         if opzioni.value != "":
             risposte_utente[domanda.value - 1] = opzioni.value
 
-        errori = []
-        for i in range(20):
-            if risposte_utente[i] == "":
-                errori.append(f"Domanda {i + 1} non risposta")
-
-        if errori:
-            erroreText.value = ""
-            for errore in errori:
-                erroreText.value += errore + "\n"
-            riepilogoText.value = ""
+        if "" in risposte_utente:
+            apri_popup(e)
+        
         else:
-            erroreText.value = ""
-            riepilogoText.value = "Test completato con successo!"
+            risultati(e)
             fine(e)
 
         page.update()
+        
+    def apri_popup(e):
+        testo = "Non hai risposto alle domande "
+        for i in range(len(risposte_utente)):
+            if risposte_utente[i] == "":
+                testo += str(i + 1) + ", "
+        testo = testo[:-2]
+        popup.content = ft.Text(testo, size = 16)
+         
+        page.open(popup)
+        page.update()
+        
+    def risultati(e):
+        print(risposte_utente, risposte_corrette, sep="\n")
+        print(len(risposte_utente), len(risposte_corrette))
+        punteggio = 0
+        for i in range(len(risposte_utente)):
+            if risposte_utente[i] == risposte_corrette[i]:
+                punteggio += 3
+        if range_età.value == "< 16":
+            punteggio += punteggio * 0.25
+        elif range_età.value == "16 - 20":
+            punteggio += punteggio * 0.15
+        punteggio = int(round(punteggio, 0))
+        punteggio += 70
+        
+        qi.value = f"Il tuo QI è {punteggio}"
+        salva_dati(punteggio, range_età.value)
+        
+        media_tot, media_eta = carica_dati(range_età.value)
+        
+        qi_medio.value = f"QI medio: {media_tot}"
+        qi_medio_eta.value = f"QI medio nel range d'età {range_età.value} : {media_eta}"
+        
+        if media_tot > punteggio:
+            qi_medio.color = "red"
+        else:
+            qi_medio.color = "green"
+        if media_eta > punteggio:
+            qi_medio_eta.color = "red"
+        else:
+            qi_medio_eta.color = "green"
         
     def fine(e):
         testo_domanda.visible = False
@@ -119,14 +163,20 @@ def main(page: ft.Page):
         successivo.visible = False
         precedente.visible = False
         termina.visible = False
+        riepilogoText.visible = True
+        riepilogoText.value = "Test completato con successo!"
+        qi.visible = True
+        qi_medio.visible = True
+        qi_medio_eta.visible = True
         for i in range(len(img_opzioni)):
             img_opzioni[i].visible = False
+        page.vertical_alignment = ft.MainAxisAlignment.CENTER
         page.update()
-        
     
     # schermata iniziale
     titolo1 = ft.Text("Test del QI: cos'è e a cosa serve", size=40)
-    testo1 = ft.Text(size=20, width = 1000, text_align=ft.TextAlign.CENTER, value="Il test del quoziente intellettivo (QI) è uno strumento pensato per misurare le capacità cognitive di una persona, cioè il modo in cui ragiona, comprende concetti, risolve problemi e apprende nuove informazioni.\nIl suo scopo principale è quello di offrire un'indicazione generale dell'intelligenza, confrontando i risultati di una persona con la media della popolazione, che è fissata a un punteggio di 100.\nDurante il test vengono proposti diversi tipi di esercizi che coinvolgono il ragionamento logico, la memoria, l’abilità nel riconoscere schemi, la comprensione del linguaggio e la capacità di lavorare con numeri o immagini.\nNon serve conoscere nozioni specifiche: si tratta più di capire come pensi e quanto velocemente riesci a elaborare le informazioni.\nIl risultato del test può essere utile per varie ragioni: da un lato, aiuta a conoscere meglio se stessi e a scoprire i propri punti di forza mentali, dall’altro, può offrire un’indicazione utile per chi sta cercando di capire quale tipo di studio o percorso lavorativo potrebbe essere più adatto.\nIn alcuni casi, è anche semplicemente un modo per sfidare la propria mente in modo stimolante e divertente.\n")
+    testo1 = ft.Text(size=20, width = 1000, text_align=ft.TextAlign.CENTER, value="Il test del quoziente intellettivo (QI) è uno strumento pensato per misurare le capacità cognitive di una persona, cioè il modo in cui ragiona, comprende concetti, risolve problemi e apprende nuove informazioni.\nIl suo scopo principale è quello di offrire un'indicazione generale dell'intelligenza, confrontando i risultati di una persona con la media della popolazione, che è fissata a un punteggio di 100.\nDurante il test vengono proposti diversi tipi di esercizi che coinvolgono il ragionamento logico, la memoria, l’abilità nel riconoscere schemi, la comprensione del linguaggio e la capacità di lavorare con numeri o immagini.\nNon serve conoscere nozioni specifiche: si tratta più di capire come pensi e quanto velocemente riesci a elaborare le informazioni.\nIl risultato del test può essere utile per varie ragioni: da un lato, aiuta a conoscere meglio se stessi e a scoprire i propri punti di forza mentali, dall’altro, può offrire un’indicazione utile per chi sta cercando di capire quale tipo di studio o percorso lavorativo potrebbe essere più adatto.\nIn alcuni casi, è anche semplicemente un modo per sfidare la propria mente in modo stimolante e divertente.")
+    testo2 = ft.Text(size=25, width = 1000, text_align=ft.TextAlign.CENTER, value="Importante: i risultati di questo test sono delle stime non scientifiche in quanto vengono utilizzati dati e criteri non ufficiali.\n", weight=ft.FontWeight.BOLD)
     inizio = ft.Button(text="Inizia", on_click=start, width=150, height=50, style=ft.ButtonStyle(text_style=ft.TextStyle(size=20)), bgcolor="#ffff66", disabled=True)
     range_età = ft.Dropdown(
         width=300,
@@ -145,12 +195,12 @@ def main(page: ft.Page):
     testo_domanda = ft.Text("Domanda", size=40, visible=False)
     img_domanda = ft.Image(src="immagini\d1\domanda1.png", visible=False, width=400, height=400)
     img_opzioni = [
-            ft.Image(src="immagini\d1\d1_risposta_A.png", visible=False),
-            ft.Image(src="immagini\d1\d1_risposta_B.png", visible=False),
-            ft.Image(src="immagini\d1\d1_risposta_C.png", visible=False),
-            ft.Image(src="immagini\d1\d1_risposta_D.png", visible=False),
-            ft.Image(src="immagini\d1\d1_risposta_E.png", visible=False),
-            ft.Image(src="immagini\d1\d1_risposta_F.png", visible=False)
+            ft.Image(src="immagini\d1\d1_risposta_A.png", visible=False, width=128, height=128),
+            ft.Image(src="immagini\d1\d1_risposta_B.png", visible=False, width=128, height=128),
+            ft.Image(src="immagini\d1\d1_risposta_C.png", visible=False, width=128, height=128),
+            ft.Image(src="immagini\d1\d1_risposta_D.png", visible=False, width=128, height=128),
+            ft.Image(src="immagini\d1\d1_risposta_E.png", visible=False, width=128, height=128),
+            ft.Image(src="immagini\d1\d1_risposta_F.png", visible=False, width=128, height=128)
         ]
     opzioni = ft.RadioGroup(visible=False, content=ft.Row([
             ft.Radio(value="A", label="A                     ", scale=1.2),
@@ -163,27 +213,47 @@ def main(page: ft.Page):
     successivo = ft.Button(text="Successivo", on_click=succ, width=150, height=50, style=ft.ButtonStyle(text_style=ft.TextStyle(size=20)), bgcolor="#ffff66", disabled=False, visible=False)
     precedente = ft.Button(text="Precedente", on_click=prec, width=150, height=50, style=ft.ButtonStyle(text_style=ft.TextStyle(size=20)), bgcolor="#ffff66", disabled=True, visible=False)
     termina = ft.Button(text="Termina", on_click=controlla_termina, width=150, height=50, style=ft.ButtonStyle(text_style=ft.TextStyle(size=20)), bgcolor="#ffff66", disabled=False, visible=False)
-    erroreText = ft.Text(color="red", size=20)
-    riepilogoText = ft.Text(color="green", size=20)
+    
+    popup = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Attenzione"),
+        content=ft.Text("Non hai risposto a tutte le domande", size = 16),
+        actions=[
+            ft.TextButton("Ok", on_click=lambda e: page.close(popup), scale=1.3)
+        ],
+    )
+    
+    riepilogoText = ft.Text(color="green", size=40, visible=False, weight=ft.FontWeight.BOLD)
+    qi = ft.Text("", size=40, visible=False)
+    qi_medio = ft.Text("", size=40, visible=False)
+    qi_medio_eta = ft.Text("", size=40, visible=False)
 
     page.add(
         ft.Row(
             [
                 ft.Column(
                     [
-                        titolo1, testo1, range_età, inizio
+                        titolo1, testo1, testo2, range_età, inizio
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER
                 ),
                 ft.Column(
                     [
-                        ft.Row([testo_domanda, domanda]), img_domanda, opzioni, ft.Row(img_opzioni), ft.Row([precedente, successivo, termina]), erroreText, riepilogoText
+                        ft.Row([testo_domanda, domanda]), img_domanda, opzioni, ft.Row(img_opzioni), ft.Row([precedente, successivo, termina]), riepilogoText
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER
-                )
+                ),
+                ft.Column(
+                    [
+                        riepilogoText, qi, qi_medio, qi_medio_eta
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                ),
             ],
             alignment=ft.MainAxisAlignment.CENTER
         )
     )
 
 ft.app(main)
+
+#TODO cambiare immagini, mettere il timer, schermata finale

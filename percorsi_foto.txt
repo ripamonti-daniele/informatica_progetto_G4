@@ -6,7 +6,7 @@ immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_F.png
-D
+A
 |
 immagini\d1\domanda2.png
 immagini\d1\d1_risposta_A.png
@@ -15,7 +15,7 @@ immagini\d1\d1_risposta_B.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_F.png
-D
+B
 |
 immagini\d1\domanda3.png
 immagini\d1\d1_risposta_A.png
@@ -24,7 +24,7 @@ immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_F.png
 immagini\d1\d1_risposta_E.png
-D
+C
 |
 immagini\d1\domanda4.png
 immagini\d1\d1_risposta_B.png
@@ -42,7 +42,7 @@ immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_F.png
-D
+E
 |
 immagini\d1\domanda6.png
 immagini\d1\d1_risposta_A.png
@@ -51,7 +51,7 @@ immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_F.png
-D
+F
 |
 immagini\d1\domanda7.png
 immagini\d1\d1_risposta_A.png
@@ -60,7 +60,7 @@ immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_B.png
 immagini\d1\d1_risposta_F.png
-D
+A
 |
 immagini\d1\domanda8.png
 immagini\d1\d1_risposta_C.png
@@ -69,7 +69,7 @@ immagini\d1\d1_risposta_B.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_F.png
-D
+B
 |
 immagini\d1\domanda9.png
 immagini\d1\d1_risposta_A.png
@@ -78,7 +78,7 @@ immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_F.png
-D
+C
 |
 immagini\d1\domanda10 (1).png
 immagini\d1\d1_risposta_A.png
@@ -96,7 +96,7 @@ immagini\d1\d1_risposta_F.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_E.png
-D
+E
 |
 immagini\d1\domanda12.png
 immagini\d1\d1_risposta_A.png
@@ -105,7 +105,7 @@ immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_F.png
-D
+F
 |
 immagini\d1\domanda13 (1) (1).png 
 immagini\d1\d1_risposta_A.png
@@ -114,7 +114,7 @@ immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_F.png
-D
+A
 |
 immagini\d1\domanda14.png
 immagini\d1\d1_risposta_F.png
@@ -123,7 +123,7 @@ immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_A.png
-D
+B
 |
 immagini\d1\domanda15.png
 immagini\d1\d1_risposta_A.png
@@ -132,7 +132,7 @@ immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_F.png
-D
+C
 |
 immagini\d1\domanda16.png
 immagini\d1\d1_risposta_A.png
@@ -150,7 +150,7 @@ immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_F.png
-D
+E
 |
 immagini\d1\domanda18.png
 immagini\d1\d1_risposta_B.png
@@ -159,7 +159,7 @@ immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_F.png
 immagini\d1\d1_risposta_E.png
-D
+F
 |
 immagini\d1\domanda19.png
 immagini\d1\d1_risposta_A.png
@@ -168,7 +168,7 @@ immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_F.png
 immagini\d1\d1_risposta_C.png
-D
+A
 |
 immagini\d1\domanda20.png
 immagini\d1\d1_risposta_B.png
@@ -177,5 +177,5 @@ immagini\d1\d1_risposta_D.png
 immagini\d1\d1_risposta_E.png
 immagini\d1\d1_risposta_C.png
 immagini\d1\d1_risposta_F.png
-D
+B
 |
