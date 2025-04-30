@@ -90,11 +90,26 @@ def main(page: ft.Page):
             successivo.disabled = False
         page.update()
         
-    def attiva_termina(e):
-        risposte_vuote = risposte_utente.count("")
-        if risposte_vuote == 1 and opzioni.value != "":
-            termina.disabled = False
-        termina.update()
+    def controlla_termina(e):
+        if opzioni.value != "":
+            risposte_utente[domanda.value - 1] = opzioni.value
+
+        errori = []
+        for i in range(20):
+            if risposte_utente[i] == "":
+                errori.append(f"Domanda {i + 1} non risposta")
+
+        if errori:
+            erroreText.value = ""
+            for errore in errori:
+                erroreText.value += errore + "\n"
+            riepilogoText.value = ""
+        else:
+            erroreText.value = ""
+            riepilogoText.value = "Test completato con successo!"
+            fine(e)
+
+        page.update()
         
     def fine(e):
         testo_domanda.visible = False
@@ -107,6 +122,7 @@ def main(page: ft.Page):
         for i in range(len(img_opzioni)):
             img_opzioni[i].visible = False
         page.update()
+        
     
     # schermata iniziale
     titolo1 = ft.Text("Test del QI: cos'è e a cosa serve", size=40)
@@ -127,7 +143,7 @@ def main(page: ft.Page):
     risposte_corrette = []
     domanda = ft.Text(1, size=40, visible=False)
     testo_domanda = ft.Text("Domanda", size=40, visible=False)
-    img_domanda = ft.Image(src="immagini\d1\domanda1.png", visible=False)
+    img_domanda = ft.Image(src="immagini\d1\domanda1.png", visible=False, width=400, height=400)
     img_opzioni = [
             ft.Image(src="immagini\d1\d1_risposta_A.png", visible=False),
             ft.Image(src="immagini\d1\d1_risposta_B.png", visible=False),
@@ -136,7 +152,7 @@ def main(page: ft.Page):
             ft.Image(src="immagini\d1\d1_risposta_E.png", visible=False),
             ft.Image(src="immagini\d1\d1_risposta_F.png", visible=False)
         ]
-    opzioni = ft.RadioGroup(visible=False, on_change=attiva_termina, content=ft.Row([
+    opzioni = ft.RadioGroup(visible=False, content=ft.Row([
             ft.Radio(value="A", label="A                     ", scale=1.2),
             ft.Radio(value="B", label="B                     ", scale=1.2),
             ft.Radio(value="C", label="C                     ", scale=1.2),
@@ -144,27 +160,12 @@ def main(page: ft.Page):
             ft.Radio(value="E", label="E                     ", scale=1.2),
             ft.Radio(value="F", label="F                  ", scale=1.2)
         ]))
-    img_domanda = ft.Image(src="immagini\d1\domanda2.png", visible=False)
-    img_opzioni = [
-            ft.Image(src="immagini\d1\d1_risposta_A.png", visible=False),
-            ft.Image(src="immagini\d1\d1_risposta_B.png", visible=False),
-            ft.Image(src="immagini\d1\d1_risposta_C.png", visible=False),
-            ft.Image(src="immagini\d1\d1_risposta_D.png", visible=False),
-            ft.Image(src="immagini\d1\d1_risposta_E.png", visible=False),
-            ft.Image(src="immagini\d1\d1_risposta_F.png", visible=False)
-        ]
-    opzioni = ft.RadioGroup(visible=False, on_change=attiva_termina, content=ft.Row([
-            ft.Radio(value="A", label="A                     ", scale=1.2),
-            ft.Radio(value="C", label="B                     ", scale=1.2),
-            ft.Radio(value="B", label="C                     ", scale=1.2),
-            ft.Radio(value="D", label="D                     ", scale=1.2),
-            ft.Radio(value="E", label="E                     ", scale=1.2),
-            ft.Radio(value="F", label="F                  ", scale=1.2)
-        ]))
     successivo = ft.Button(text="Successivo", on_click=succ, width=150, height=50, style=ft.ButtonStyle(text_style=ft.TextStyle(size=20)), bgcolor="#ffff66", disabled=False, visible=False)
     precedente = ft.Button(text="Precedente", on_click=prec, width=150, height=50, style=ft.ButtonStyle(text_style=ft.TextStyle(size=20)), bgcolor="#ffff66", disabled=True, visible=False)
-    termina = ft.Button(text="Termina", on_click=fine, width=150, height=50, style=ft.ButtonStyle(text_style=ft.TextStyle(size=20)), bgcolor="#ffff66", disabled=True, visible=False)
-        
+    termina = ft.Button(text="Termina", on_click=controlla_termina, width=150, height=50, style=ft.ButtonStyle(text_style=ft.TextStyle(size=20)), bgcolor="#ffff66", disabled=False, visible=False)
+    erroreText = ft.Text(color="red", size=20)
+    riepilogoText = ft.Text(color="green", size=20)
+
     page.add(
         ft.Row(
             [
@@ -176,7 +177,7 @@ def main(page: ft.Page):
                 ),
                 ft.Column(
                     [
-                        ft.Row([testo_domanda, domanda]), img_domanda, opzioni, ft.Row(img_opzioni), ft.Row([precedente, successivo, termina])
+                        ft.Row([testo_domanda, domanda]), img_domanda, opzioni, ft.Row(img_opzioni), ft.Row([precedente, successivo, termina]), erroreText, riepilogoText
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER
                 )
