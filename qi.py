@@ -30,10 +30,42 @@ def main(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.START
     
     def carica_dati(range_eta):
-        pass
+        errore = True
+        try:
+            f = open("risultati.txt", "r", encoding="utf-8")
+            errore = False
+        except:
+            print("errore: file non trovato")
+        if not(errore):
+            tot = []
+            tot_eta = []
+            for r in f:
+                r = r.replace("\n", "")
+                dati = r.split("|")
+                tot.append(int(dati[0]))
+                if dati[1] == range_eta:
+                    tot_eta.append(int(dati[0]))
+            f.close()
+            somma = 0
+            for i in tot:
+                somma += i
+            media_tot = somma // len(tot)
+            somma = 0
+            for i in tot_eta:
+                somma += i
+            media_eta = somma // len(tot_eta)
+            return media_tot, media_eta
     
     def salva_dati(punteggio, range_eta):
-        pass
+        errore = True
+        try:
+            f = open("risultati.txt", "a", encoding="utf-8")
+            errore = False
+        except:
+            print("errore: file non trovato")
+        if not(errore):
+            f.write(str(punteggio) + "|" + range_eta + "\n")
+            f.close()
         
     def crea_domanda(n_domanda):
         percorsi = carica_domanda(n_domanda)
@@ -114,7 +146,7 @@ def main(page: ft.Page):
         page.update()
         
     def apri_popup(e):
-        testo = "Non hai risposto alle domande "
+        testo = "Non hai risposto alle domande: "
         for i in range(len(risposte_utente)):
             if risposte_utente[i] == "":
                 testo += str(i + 1) + ", "
