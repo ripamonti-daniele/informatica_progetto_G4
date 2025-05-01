@@ -57,8 +57,8 @@ def main(page: ft.Page):
             for i in tot:
                 somma += i
             media_tot = somma // len(tot)
-            somma = 0
             
+            somma = 0
             for i in tot_eta:
                 somma += i
             media_eta = somma // len(tot_eta)
@@ -185,9 +185,7 @@ def main(page: ft.Page):
             punteggio += punteggio * 0.15
         punteggio = int(round(punteggio, 0))
         punteggio += 70
-        
         qi.value = f"Il tuo QI è {punteggio}"
-        salva_dati(punteggio, range_età.value) # salva il punteggio
         
         #prende i risultati medi
         media_tot, media_eta = carica_dati(range_età.value)
@@ -203,6 +201,9 @@ def main(page: ft.Page):
             qi_medio_eta.color = "red"
         else:
             qi_medio_eta.color = "green"
+        
+        # salva il punteggio dopo aver calcolato la media (si esclude così il proprio punteggio da quello medio)  
+        salva_dati(punteggio, range_età.value)
         
     def fine(e): # rimuove gli elementi del test per mostrare i dati finali
         testo_domanda.visible = False
