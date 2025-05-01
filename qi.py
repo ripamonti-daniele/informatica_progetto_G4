@@ -1,4 +1,6 @@
 import flet as ft
+from time import sleep
+from threading import Thread
 
 def main(page: ft.Page):
     #impostazioni base della pagina
@@ -105,10 +107,38 @@ def main(page: ft.Page):
         successivo.visible = True
         precedente.visible = True
         termina.visible = True
+        timer.visible = True
         crea_domanda(domanda.value) # prende i percorsi della prima domanda e li applica alle immagini
         for i in range(len(img_opzioni)):
             img_opzioni[i].visible = True
+        crea_thread(e)
         page.update()
+
+    def inizio_timer(e): 
+        print()
+        global timer_attivo, secondi, minuti
+        timer_attivo = True
+        while timer_attivo:
+            secondi -= 1
+            if minuti == 0 and secondi == -1:
+                secondi = 0
+                timer_attivo = False
+            elif secondi == -1:
+                secondi = 59
+                minuti -= 1
+            
+            timer.value = f"Tempo rimasto {minuti} : {secondi}"
+            page.update()
+            sleep(1)
+        
+        risultati(e)
+        fine(e)
+    
+    def crea_thread(e): 
+        global timer_attivo
+        thread_timer = Thread(target=inizio_timer(e), daemon=True)
+        thread_timer.start()
+        timer_attivo = True
         
     def succ(e): # passa alla domanda successiva salvando la risposta selezionata dall'utente
         if opzioni.value == None:
@@ -218,6 +248,7 @@ def main(page: ft.Page):
         qi.visible = True
         qi_medio.visible = True
         qi_medio_eta.visible = True
+        timer.visible = False
         for i in range(len(img_opzioni)):
             img_opzioni[i].visible = False
         page.vertical_alignment = ft.MainAxisAlignment.CENTER
@@ -227,7 +258,7 @@ def main(page: ft.Page):
     titolo1 = ft.Text("Test del QI: cos'è e a cosa serve", size=40)
     testo1 = ft.Text(size=20, width = 1000, text_align=ft.TextAlign.CENTER, value="Il test del quoziente intellettivo (QI) è uno strumento pensato per misurare le capacità cognitive di una persona, cioè il modo in cui ragiona, comprende concetti, risolve problemi e apprende nuove informazioni.\nIl suo scopo principale è quello di offrire un'indicazione generale dell'intelligenza, confrontando i risultati di una persona con la media della popolazione, che è fissata a un punteggio di 100.\nDurante il test vengono proposti diversi tipi di esercizi che coinvolgono il ragionamento logico, la memoria, l’abilità nel riconoscere schemi, la comprensione del linguaggio e la capacità di lavorare con numeri o immagini.\nNon serve conoscere nozioni specifiche: si tratta più di capire come pensi e quanto velocemente riesci a elaborare le informazioni.\nIl risultato del test può essere utile per varie ragioni: da un lato, aiuta a conoscere meglio se stessi e a scoprire i propri punti di forza mentali, dall’altro, può offrire un’indicazione utile per chi sta cercando di capire quale tipo di studio o percorso lavorativo potrebbe essere più adatto.\nIn alcuni casi, è anche semplicemente un modo per sfidare la propria mente in modo stimolante e divertente.")
     testo2 = ft.Text(size=25, width = 1000, text_align=ft.TextAlign.CENTER, value="Importante: i risultati di questo test sono delle stime non scientifiche in quanto vengono utilizzati dati e criteri non ufficiali.\n", weight=ft.FontWeight.BOLD)
-    inizio = ft.Button(text="Inizia", on_click=start, width=150, height=50, style=ft.ButtonStyle(text_style=ft.TextStyle(size=20)), bgcolor="#ffff66", disabled=True)
+    inizio = ft.Button(text="Inizia", on_click=start, width=150, height=50, style=ft.ButtonStyle(text_style=ft.TextStyle(size=20)), bgcolor="#ffff66", disabled=True, visible=True)
     range_età = ft.Dropdown(
         width=300,
         label="Inserisci la tua età",
@@ -272,6 +303,11 @@ def main(page: ft.Page):
             ft.TextButton("Ok", on_click=lambda e: page.close(popup), scale=1.3)
         ],
     )
+    global timer_attivo, secondi, minuti
+    minuti = 15
+    secondi = 0
+    timer_attivo = False
+    timer = ft.Text(f"Tempo rimasto {minuti} : {secondi}", size=40, visible=False)
     
     # dati finali
     riepilogoText = ft.Text(color="green", size=40, visible=False, weight=ft.FontWeight.BOLD)
@@ -291,7 +327,7 @@ def main(page: ft.Page):
                 ),
                 ft.Column(
                     [
-                        ft.Row([testo_domanda, domanda]), img_domanda, opzioni, ft.Row(img_opzioni), ft.Row([precedente, successivo, termina]), riepilogoText
+                        ft.Row([testo_domanda, domanda, timer]), img_domanda, opzioni, ft.Row(img_opzioni), ft.Row([precedente, successivo, termina]), riepilogoText
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER
                 ),
