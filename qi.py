@@ -1,44 +1,49 @@
 import flet as ft
 
-def carica_domanda(n_domanda):
-    avanti = False
-    try:
-        f = open("percorsi_foto.txt", "r", encoding="utf-8")
-        avanti = True
-    except FileNotFoundError:
-        print("file non trovato")
-        
-    if avanti:
-        percorsi = []
-        x = 0
-        for r in f:
-            r = r.strip("\n")
-            if r == "|":
-                x += 1
-            if x == n_domanda:
-                for i in range(8):
-                    percorsi.append(f.readline().strip("\n"))
-                break        
-                
-        f.close()
-        return percorsi
-
 def main(page: ft.Page):
+    #impostazioni base della pagina
     page.window.width = 1200
     page.window.height = 900
     page.title = "Test del quoziente intellettivo"
     page.vertical_alignment = ft.MainAxisAlignment.START
     
-    def carica_dati(range_eta):
+    def carica_domanda(n_domanda): #per ogni domanda prende immagini e risposte
+        avanti = False
+        try:
+            f = open("percorsi_foto.txt", "r", encoding="utf-8")
+            avanti = True
+        except FileNotFoundError:
+            print("file non trovato")
+            
+        if avanti:
+            percorsi = []
+            x = 0
+            # con questo ciclo si contano i pipe (|) per trovare la posizione dei percorsi
+            for r in f:
+                r = r.strip("\n")
+                if r == "|":
+                    x += 1
+                if x == n_domanda:
+                    for i in range(8):
+                        percorsi.append(f.readline().strip("\n"))
+                    break        
+                    
+            f.close()
+            return percorsi
+    
+    def carica_dati(range_eta): #prende i dati dei test qi già svolti
         errore = True
         try:
             f = open("risultati.txt", "r", encoding="utf-8")
             errore = False
         except:
             print("errore: file non trovato")
+        
         if not(errore):
             tot = []
             tot_eta = []
+            
+            #questo ciclo aggiunge alla lista tot tutti i risulati e alla lista tot_eta tutti i risultati del range d'età preso come parametro
             for r in f:
                 r = r.replace("\n", "")
                 dati = r.split("|")
@@ -46,28 +51,33 @@ def main(page: ft.Page):
                 if dati[1] == range_eta:
                     tot_eta.append(int(dati[0]))
             f.close()
+            
+            # calcolo qi medio generale e nel range d'età
             somma = 0
             for i in tot:
                 somma += i
             media_tot = somma // len(tot)
             somma = 0
+            
             for i in tot_eta:
                 somma += i
             media_eta = somma // len(tot_eta)
+            
             return media_tot, media_eta
     
-    def salva_dati(punteggio, range_eta):
+    def salva_dati(punteggio, range_eta): # aggiunge sul file il risultato del test eseguito con il range d'età selezionato all'inizio
         errore = True
         try:
             f = open("risultati.txt", "a", encoding="utf-8")
             errore = False
         except:
             print("errore: file non trovato")
+        
         if not(errore):
             f.write(str(punteggio) + "|" + range_eta + "\n")
             f.close()
         
-    def crea_domanda(n_domanda):
+    def crea_domanda(n_domanda): # prende le domande e mette i loro percorsi come src delle immagini
         percorsi = carica_domanda(n_domanda)
         img_domanda.src = percorsi[0]
         
@@ -75,14 +85,14 @@ def main(page: ft.Page):
             img_opzioni[i].visible = True
             img_opzioni[i].src = percorsi[i + 1]
     
-        risposte_corrette.append(percorsi[7])
+        risposte_corrette.append(percorsi[7]) # salva la risposta corretta
     
-    def attiva_inizio(e):
+    def attiva_inizio(e): # una volta scelto il range d'età attiva il pulsante inizio
         if e.data != None:
             inizio.disabled = False
             inizio.update()
         
-    def start(e):
+    def start(e): # rimuove gli elementi mostrati all'inizio e mostra quelli necessari per svolgere il test
         titolo1.visible = False
         testo1.visible = False
         testo2.visible = False
@@ -95,48 +105,52 @@ def main(page: ft.Page):
         successivo.visible = True
         precedente.visible = True
         termina.visible = True
-        crea_domanda(domanda.value)
+        crea_domanda(domanda.value) # prende i percorsi della prima domanda e li applica alle immagini
         for i in range(len(img_opzioni)):
             img_opzioni[i].visible = True
         page.update()
         
-    def succ(e):
+    def succ(e): # passa alla domanda successiva salvando la risposta selezionata dall'utente
         if opzioni.value == None:
             opzioni.value = ""
         if opzioni.value != "":
             risposte_utente[domanda.value - 1] = opzioni.value
-        #print(risposte_utente)
+            
         domanda.value += 1
         opzioni.value = risposte_utente[domanda.value - 1]
         crea_domanda(domanda.value)
+        
+        # se si trova alla domanda 20 disabilita il pulsante successivo, se si sposta dalla domanda 1 attiva il pulsante precedente
         if domanda.value == 20:
             successivo.disabled = True
         if domanda.value > 1:
             precedente.disabled = False
         page.update()
     
-    def prec(e):
+    def prec(e): # passa alla domanda precedente salvando la risposta selezionata dall'utente
         if opzioni.value == None:
              opzioni.value = ""
         if opzioni.value != "":
             risposte_utente[domanda.value - 1] = opzioni.value
-        # print(risposte_utente)
+            
         domanda.value -= 1
         opzioni.value = risposte_utente[domanda.value - 1]
         crea_domanda(domanda.value)
+        
+        # se si trova alla domanda 1 disabilita il pulsante precedente, se si sposta dalla domanda 20 attiva il pulsante successivo
         if domanda.value == 1:
             precedente.disabled = True
         if domanda.value < 20:
             successivo.disabled = False
         page.update()
         
-    def controlla_termina(e):
+    def controlla_termina(e): # verifica che l'utente abbia risposto a tutte le domanda prima di finire il test
         if opzioni.value == None:
              opzioni.value = ""
         if opzioni.value != "":
             risposte_utente[domanda.value - 1] = opzioni.value
 
-        if "" in risposte_utente:
+        if "" in risposte_utente: # se ci sono delle domande senza risposta viene aperto un popup che indica quali domande mancano
             apri_popup(e)
         
         else:
@@ -145,7 +159,8 @@ def main(page: ft.Page):
 
         page.update()
         
-    def apri_popup(e):
+    def apri_popup(e): # funzione che apre il popup
+        # con questo ciclo vengono trovate le domande a cui non si ha ancora risposto
         testo = "Non hai risposto alle domande: "
         for i in range(len(risposte_utente)):
             if risposte_utente[i] == "":
@@ -156,14 +171,15 @@ def main(page: ft.Page):
         page.open(popup)
         page.update()
         
-    def risultati(e):
-        print(risposte_utente, risposte_corrette, sep="\n")
-        print(len(risposte_utente), len(risposte_corrette))
+    def risultati(e): # calcola il qi in base alle riosposte e prende i dati del file per fornire dei valori medi di confronto
+        # calcolo punteggio
         punteggio = 0
         for i in range(len(risposte_utente)):
             if risposte_utente[i] == risposte_corrette[i]:
                 punteggio += 3
-        if range_età.value == "< 16":
+
+        # i minori di 16 anni e le persone nel range 16 - 20 hanno un piccolo aumento del risulato in quanto le domade sono realizzate per persone adulte e non in fase di sviluppo
+        if range_età.value == "< 16": 
             punteggio += punteggio * 0.25
         elif range_età.value == "16 - 20":
             punteggio += punteggio * 0.15
@@ -171,8 +187,9 @@ def main(page: ft.Page):
         punteggio += 70
         
         qi.value = f"Il tuo QI è {punteggio}"
-        salva_dati(punteggio, range_età.value)
+        salva_dati(punteggio, range_età.value) # salva il punteggio
         
+        #prende i risultati medi
         media_tot, media_eta = carica_dati(range_età.value)
         
         qi_medio.value = f"QI medio: {media_tot}"
@@ -187,7 +204,7 @@ def main(page: ft.Page):
         else:
             qi_medio_eta.color = "green"
         
-    def fine(e):
+    def fine(e): # rimuove gli elementi del test per mostrare i dati finali
         testo_domanda.visible = False
         domanda.visible = False
         img_domanda.visible = False
@@ -220,7 +237,7 @@ def main(page: ft.Page):
         on_change=attiva_inizio
     )
     
-    # domande test
+    # elementi domande test
     risposte_utente = ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""]
     risposte_corrette = []
     domanda = ft.Text(1, size=40, visible=False)
@@ -240,7 +257,7 @@ def main(page: ft.Page):
             ft.Radio(value="C", label="C                     ", scale=1.2),
             ft.Radio(value="D", label="D                     ", scale=1.2),
             ft.Radio(value="E", label="E                     ", scale=1.2),
-            ft.Radio(value="F", label="F                  ", scale=1.2)
+            ft.Radio(value="F", label="F         ", scale=1.2)
         ]))
     successivo = ft.Button(text="Successivo", on_click=succ, width=150, height=50, style=ft.ButtonStyle(text_style=ft.TextStyle(size=20)), bgcolor="#ffff66", disabled=False, visible=False)
     precedente = ft.Button(text="Precedente", on_click=prec, width=150, height=50, style=ft.ButtonStyle(text_style=ft.TextStyle(size=20)), bgcolor="#ffff66", disabled=True, visible=False)
@@ -255,11 +272,13 @@ def main(page: ft.Page):
         ],
     )
     
+    # dati finali
     riepilogoText = ft.Text(color="green", size=40, visible=False, weight=ft.FontWeight.BOLD)
     qi = ft.Text("", size=40, visible=False)
     qi_medio = ft.Text("", size=40, visible=False)
     qi_medio_eta = ft.Text("", size=40, visible=False)
 
+    # messa a schermo elementi
     page.add(
         ft.Row(
             [
@@ -288,4 +307,4 @@ def main(page: ft.Page):
 
 ft.app(main)
 
-#TODO cambiare immagini, mettere il timer, schermata finale
+#TODO mettere il timer
