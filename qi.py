@@ -114,10 +114,11 @@ def main(page: ft.Page):
         crea_thread(e)
         page.update()
 
-    def inizio_timer(e): 
+    def inizio_timer(e): # fa iniziare il timer
         print()
         global timer_attivo, secondi, minuti
         timer_attivo = True
+        # il ciclo serve per far scorrere il tempo
         while timer_attivo:
             secondi -= 1
             if minuti == 0 and secondi == -1:
@@ -127,16 +128,20 @@ def main(page: ft.Page):
                 secondi = 59
                 minuti -= 1
             
-            timer.value = f"Tempo rimasto {minuti} : {secondi}"
+            timer.value = f"- Tempo rimasto {minuti} : {secondi}"
             page.update()
             sleep(1)
+        
+        # una volta scaduto il timer si il test finisce
+        for i in range(len(risposte_corrette), 20): # serve a far in modo che la lista risposte_corrette non vada fuori range in caso il timer finisca prima di aver passato tutte le domande
+            risposte_corrette.append(None)
         
         risultati(e)
         fine(e)
     
-    def crea_thread(e): 
+    def crea_thread(e): # crea un thread
         global timer_attivo
-        thread_timer = Thread(target=inizio_timer(e), daemon=True)
+        thread_timer = Thread(target=inizio_timer(e), daemon=True) # crea un thread in modo da poter eseguire la funzione inizio_timer separatamente dal resto del programma
         thread_timer.start()
         timer_attivo = True
         
@@ -307,7 +312,7 @@ def main(page: ft.Page):
     minuti = 15
     secondi = 0
     timer_attivo = False
-    timer = ft.Text(f"Tempo rimasto {minuti} : {secondi}", size=40, visible=False)
+    timer = ft.Text(f"- Tempo rimasto {minuti} : {secondi}", size=40, visible=False)
     
     # dati finali
     riepilogoText = ft.Text(color="green", size=40, visible=False, weight=ft.FontWeight.BOLD)
