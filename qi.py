@@ -1,6 +1,15 @@
 import flet as ft
 from time import sleep
 from threading import Thread
+import sys
+import os
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS  # dove PyInstaller estrae i file
+    except AttributeError:
+       	base_path = os.path.abspath(".")  # normale esecuzione
+    return os.path.join(base_path, relative_path)
 
 def main(page: ft.Page):
     #impostazioni base della pagina
@@ -12,7 +21,7 @@ def main(page: ft.Page):
     def carica_domanda(n_domanda): #per ogni domanda prende immagini e risposte
         avanti = False
         try:
-            f = open("percorsi_foto.txt", "r", encoding="utf-8")
+            f = open(resource_path("percorsi_foto.txt"), "r", encoding="utf-8")
             avanti = True
         except FileNotFoundError:
             print("file non trovato")
@@ -36,7 +45,7 @@ def main(page: ft.Page):
     def carica_dati(range_eta): #prende i dati dei test qi già svolti
         errore = True
         try:
-            f = open("risultati.txt", "r", encoding="utf-8")
+            f = open(resource_path("risultati.txt"), "r", encoding="utf-8")
             errore = False
         except:
             print("errore: file non trovato")
@@ -70,7 +79,7 @@ def main(page: ft.Page):
     def salva_dati(punteggio, range_eta): # aggiunge sul file il risultato del test eseguito con il range d'età selezionato all'inizio
         errore = True
         try:
-            f = open("risultati.txt", "a", encoding="utf-8")
+            f = open(resource_path("risultati.txt"), "a", encoding="utf-8")
             errore = False
         except:
             print("errore: file non trovato")
@@ -81,11 +90,11 @@ def main(page: ft.Page):
         
     def crea_domanda(n_domanda): # prende le domande e mette i loro percorsi come src delle immagini
         percorsi = carica_domanda(n_domanda)
-        img_domanda.src = percorsi[0]
+        img_domanda.src = resource_path(percorsi[0])
         
         for i in range(len(img_opzioni)):
             img_opzioni[i].visible = True
-            img_opzioni[i].src = percorsi[i + 1]
+            img_opzioni[i].src = resource_path(percorsi[i + 1])
     
         risposte_corrette.append(percorsi[7]) # salva la risposta corretta
     
@@ -279,14 +288,14 @@ def main(page: ft.Page):
     risposte_corrette = []
     domanda = ft.Text(1, size=40, visible=False)
     testo_domanda = ft.Text("Domanda", size=40, visible=False)
-    img_domanda = ft.Image(src="immagini\d1\domanda1.png", visible=False, width=400, height=400)
+    img_domanda = ft.Image(src=resource_path("immagini\d1\domanda1.png"), visible=False, width=400, height=400)
     img_opzioni = [
-            ft.Image(src="immagini\d1\d1_risposta_A.png", visible=False, width=128, height=128),
-            ft.Image(src="immagini\d1\d1_risposta_B.png", visible=False, width=128, height=128),
-            ft.Image(src="immagini\d1\d1_risposta_C.png", visible=False, width=128, height=128),
-            ft.Image(src="immagini\d1\d1_risposta_D.png", visible=False, width=128, height=128),
-            ft.Image(src="immagini\d1\d1_risposta_E.png", visible=False, width=128, height=128),
-            ft.Image(src="immagini\d1\d1_risposta_F.png", visible=False, width=128, height=128)
+            ft.Image(src=resource_path("immagini\d1\d1_risposta_A.png"), visible=False, width=128, height=128),
+            ft.Image(src=resource_path("immagini\d1\d1_risposta_B.png"), visible=False, width=128, height=128),
+            ft.Image(src=resource_path("immagini\d1\d1_risposta_C.png"), visible=False, width=128, height=128),
+            ft.Image(src=resource_path("immagini\d1\d1_risposta_D.png"), visible=False, width=128, height=128),
+            ft.Image(src=resource_path("immagini\d1\d1_risposta_E.png"), visible=False, width=128, height=128),
+            ft.Image(src=resource_path("immagini\d1\d1_risposta_F.png"), visible=False, width=128, height=128)
         ]
     opzioni = ft.RadioGroup(visible=False, content=ft.Row([
             ft.Radio(value="A", label="A                     ", scale=1.2),
